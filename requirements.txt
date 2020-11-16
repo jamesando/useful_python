@@ -1,2 +1,4 @@
 smtp
 pymysql
+requests
+json
