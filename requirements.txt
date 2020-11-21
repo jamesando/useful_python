@@ -2,3 +2,5 @@ smtp
 pymysql
 requests
 json
+csv
+bs4

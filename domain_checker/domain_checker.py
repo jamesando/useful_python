@@ -19,5 +19,5 @@ for domain in domain_list:
     request_url = url + domain
     response = get(request_url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    mydivs = soup.findAll("div", {"class": "exact-header"})
+    mydivs = soup.findAll("div", {"class": "container"})
     print(mydivs)
