@@ -1,23 +1,25 @@
-import os
-import requests
-from requests import get
+import whois
+import datetime
 import csv
-from bs4 import BeautifulSoup
 
+now = datetime.datetime.now()
 domain_list = []
 
-# Read in the domains from the txt file into a list
-with open("domains.txt", "r") as domains:
-    for row in domains:
-        domain_list.append(row.strip('\n'))
+headers = ['Domain','Registrar','Registrar URL','Status','Reg Name','Reg Type','Reg Street','Reg City','Reg Country','Created','Expiration','Updated']
 
-# Prepare the requests
-url = "https://uk.godaddy.com/domainsearch/find?checkAvail=1&domainToCheck="
+with open('domain_results.csv', 'w', newline='') as csvfile:
 
-# Loop through the list and return the web page
-for domain in domain_list:
-    request_url = url + domain
-    response = get(request_url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    mydivs = soup.findAll("div", {"class": "container"})
-    print(mydivs)
+    # Read in the domains from the txt file into a list
+    with open("domains.txt", "r") as domains:
+        for row in domains:
+            domain_list.append(row.strip('\n'))
+
+    # Loop through the list and return the web page
+    for domain in domain_list:
+        try:
+            res = whois.whois(domain)
+            print(res)
+            exp = res['expiration_date']
+            expired = "it expired on " if exp < now else "it expires on "
+        except:
+            print(domain + " is available")
