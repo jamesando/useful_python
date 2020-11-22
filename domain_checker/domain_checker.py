@@ -9,6 +9,10 @@ headers = ['Domain','Registrar','Registrar URL','Status','Reg Name','Reg Type','
 
 with open('domain_results.csv', 'w', newline='') as csvfile:
 
+    spamwriter = csv.writer(csvfile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(headers)
+    
+
     # Read in the domains from the txt file into a list
     with open("domains.txt", "r") as domains:
         for row in domains:
@@ -18,8 +22,10 @@ with open('domain_results.csv', 'w', newline='') as csvfile:
     for domain in domain_list:
         try:
             res = whois.whois(domain)
-            print(res)
             exp = res['expiration_date']
             expired = "it expired on " if exp < now else "it expires on "
+            spamwriter.writerow([domain,res['registrar'],res['registrar_url'],res['status'],
+            res['registrant_name'],res['registrant_type'],res['registrant_street'],res['registrant_city'],
+            res['registrant_country'],res['creation_date'],res['expiration_date'],res['updated_date']])
         except:
-            print(domain + " is available")
+            spamwriter.writerow([domain,'','','Available'])
